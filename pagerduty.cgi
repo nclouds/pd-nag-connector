@@ -24,6 +24,8 @@ my $CONFIG = {
 
 sub ackHost {
 	my ($time, $host, $comment, $author, $sticky, $notify, $persistent) = @_;
+	
+	$notify = 1;
 
 	# Open the external commands file
 	if (! open (NAGIOS, '>>', $CONFIG->{'command_file'})) {
@@ -69,6 +71,8 @@ sub deackHost {
 
 sub ackService {
 	my ($time, $host, $service, $comment, $author, $sticky, $notify, $persistent) = @_;
+	
+	$notify = 1;
 
 	# Open the external commands file
 	if (! open (NAGIOS, '>>', $CONFIG->{'command_file'})) {
@@ -155,10 +159,10 @@ MESSAGE: foreach $message (@{$JSON->{'messages'}}) {
 
 	if ($message->{'type'} eq 'incident.acknowledge') {
                 if ($hostservice->{'SERVICEDESC'} eq "") {
-			($status, $error) = ackHost ($TIME, $hostservice->{'HOSTNAME'}, 'Acknowledged by PagerDuty', 'PagerDuty', 2, 0, 0);
+			($status, $error) = ackHost ($TIME, $hostservice->{'HOSTNAME'}, 'Acknowledged by PagerDuty', 'PagerDuty', 2, 1, 0);
 
 		} else {
-			($status, $error) = ackService ($TIME, $hostservice->{'HOSTNAME'}, $hostservice->{'SERVICEDESC'}, 'Acknowledged by PagerDuty', 'PagerDuty', 2, 0, 0);
+			($status, $error) = ackService ($TIME, $hostservice->{'HOSTNAME'}, $hostservice->{'SERVICEDESC'}, 'Acknowledged by PagerDuty', 'PagerDuty', 2, 1, 0);
 		}
 
 		$return->{'messages'}{$message->{'id'}} = {
